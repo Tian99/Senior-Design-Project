@@ -1,5 +1,3 @@
-// Source of origin code : https://www.nyebarilmu.com/tutorial-arduino-mengakses-nodemcu-sebagai-access-point/
-// Entering the Library, for the tutorial on adding NodeMCU libraries and boards, see here: https://www.youtube.com/watch?v=8jMr94B8iN0
 #include <ESP8266WebServer.h> 
 #include <ESP8266WiFi.h> 
 #include <WiFiClient.h> 
