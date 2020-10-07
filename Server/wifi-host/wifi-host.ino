@@ -1,8 +1,6 @@
-// Simple WiFi-controlled car on NodeMCU V2 and L9110S motor drive board
-// by Alan Wang
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include "index.h"
 
 // WiFi settings
 #define WIFI_MODE           1                     // 1 = AP mode, 2 = STA mode
@@ -68,42 +66,42 @@ void loop() {
 void handle_OnConnect() {
   car_mode = 0;
   Serial.println("Client connected");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: stop car
 void handle_stop() {
   car_mode = 0;
   Serial.println("Stopped");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: go forward
 void handle_forward() {
   car_mode = 1;
   Serial.println("Go forward...");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: go backward
 void handle_backward() {
   car_mode = 2;
   Serial.println("Go backward...");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: turn left
 void handle_left() {
   car_mode = 3;
   Serial.println("Turn left...");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: turn right
 void handle_right() {
   car_mode = 4;
   Serial.println("Turn right...");
-  server.send(200, "text/html", SendHTML());
+  server.send(200, "text/html", index_html);
 }
 
 // HTTP request: other
@@ -148,32 +146,32 @@ void car_control() {
 
   }
 }
-
-// output HTML web page for user
-String SendHTML() {
-  String html = "<!DOCTYPE html>\n";
-  html += "<html>\n";
-  html += "<head>\n";
-  html += "<title>NodeMCU Wifi Car</title>\n";
-  html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
-  html += "</head>\n";
-  html += "<body>\n";
-  html += "<div align=\"center\">\n";
-  html += "<h1>NodeMCU Wifi Car</h1>\n";
-  html += "<br>\n";
-  html += "<form method=\"GET\">\n";
-  html += "<input type=\"button\" value=\"Go forward\" onclick=\"window.location.href='/forward'\">\n";
-  html += "<br><br>\n";
-  html += "<input type=\"button\" value=\"Go backward\" onclick=\"window.location.href='/backward'\">\n";
-  html += "<br><br>\n";
-  html += "<input type=\"button\" value=\"Turn left\" onclick=\"window.location.href='/left'\">\n";
-  html += "<br><br>\n";
-  html += "<input type=\"button\" value=\"Turn right\" onclick=\"window.location.href='/right'\">\n";
-  html += "<br><br>\n";
-  html += "<input type=\"button\" value=\"Car stop\" onclick=\"window.location.href='/stop'\">\n";
-  html += "</form>\n";
-  html += "</div>\n";
-  html += "</body>\n";
-  html += "</html>\n";
-  return html;
-}
+//
+//// output HTML web page for user
+//String SendHTML() {
+//  String html = "<!DOCTYPE html>\n";
+//  html += "<html>\n";
+//  html += "<head>\n";
+//  html += "<title>NodeMCU Wifi Car</title>\n";
+//  html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
+//  html += "</head>\n";
+//  html += "<body>\n";
+//  html += "<div align=\"center\">\n";
+//  html += "<h1>NodeMCU Wifi Car</h1>\n";
+//  html += "<br>\n";
+//  html += "<form method=\"GET\">\n";
+//  html += "<input type=\"button\" value=\"Go forward\" onclick=\"window.location.href='/forward'\">\n";
+//  html += "<br><br>\n";
+//  html += "<input type=\"button\" value=\"Go backward\" onclick=\"window.location.href='/backward'\">\n";
+//  html += "<br><br>\n";
+//  html += "<input type=\"button\" value=\"Turn left\" onclick=\"window.location.href='/left'\">\n";
+//  html += "<br><br>\n";
+//  html += "<input type=\"button\" value=\"Turn right\" onclick=\"window.location.href='/right'\">\n";
+//  html += "<br><br>\n";
+//  html += "<input type=\"button\" value=\"Car stop\" onclick=\"window.location.href='/stop'\">\n";
+//  html += "</form>\n";
+//  html += "</div>\n";
+//  html += "</body>\n";
+//  html += "</html>\n";
+//  return html;
+//}
