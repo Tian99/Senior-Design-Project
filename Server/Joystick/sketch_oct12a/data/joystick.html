@@ -8,14 +8,15 @@
 			overflow	: hidden;
 			padding		: 0;
 			margin		: 0;
-			background-color: #BBB;
+			background-color: black;
 		}
+
 		#info {
 			position	: absolute;
 			top		: 0px;
 			width		: 100%;
 			padding		: 5px;
-			text-align	: center;
+			color       : white;
 		}
 		#info a {
 			color		: #66F;
@@ -33,15 +34,60 @@
 			-webkit-user-select	: none;
 			-moz-user-select	: none;
 		}
+
+		#displacement{
+			text-align : center;
+			padding: 10px 20px;
+			color: white;
+		}
+
+		#topic{
+			text-align : center;
+		}
+
+		.btn-group .button {
+		  background-color: black; /* Green */
+		  border: 1px solid green;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  font-size: 8px;
+		  cursor: pointer;
+		  width: 20px;
+		  display: block;
+		}
+
+		#btns{
+			position: absolute;
+			float : left;
+			top: 20px;
+
+		}
+
+		.btn-group .button:not(:last-child) {
+  			border-bottom: none; /* Prevent double borders */
+		}
+
+		.btn-group .button:hover {
+  			background-color: #3e8e41;
+		}
+
 		</style>
 
 	</head>
 	<body>
 		<div id="container"></div>
 		<div id="info">
-			Touch the screen and move
+			<p id = "topic">Control Panel</p>
 			<br/>
 			<span id="result"></span>
+			<div class="btn-group", id = btns>
+			  <button class="button">Anto Enable</button>
+			  <button class="button">Anto Disable</button>
+			  <button class="button">Button</button>
+			  <button class="button">Button</button>
+			</div>
 		</div> 
 		<script src="./virtualjoystick.js"></script>
 		<script>
@@ -66,9 +112,10 @@
 				var outputEl	= document.getElementById('result');
 				newX = Math.round(joystick.deltaX());
 				newY = Math.round(joystick.deltaY()) * -1;
-				outputEl.innerHTML	= '<b>Position:</b> '
+				outputEl.innerHTML	= '<div id = "displacement">Position:'
 					+ ' X:'+newX
-					+ ' Y:'+newY;
+					+ ' Y:'+newY
+					+ '</div>';
 				if ( newX != prevX || newY != prevY ){
 					var xhr = new XMLHttpRequest();
 					xhr.open('PUT', "./jsData.html?x="+newX+"&y="+newY)
