@@ -11,6 +11,10 @@
 			background-color: black;
 		}
 
+		#result{
+			font-size : 10px;
+		}
+
 		#info {
 			position	: absolute;
 			top		: 0px;
@@ -43,6 +47,19 @@
 
 		#topic{
 			text-align : center;
+		}
+
+		#feedback{
+			position: absolute;
+			font-size: 8px;
+			background-color: black;
+  			width: 90px;
+  			height: 120px;
+  			border: 2px solid green;
+  			padding: 2px;
+  			margin: 1px;
+  			right :10px;
+  			top :20px;
 		}
 
 		.btn-group .button {
@@ -81,13 +98,38 @@
 		<div id="info">
 			<p id = "topic">Control Panel</p>
 			<br/>
+
+			<div id="feedback">
+				Auto-pilot: FALSE
+			</br>
+			</br>
+
+				Left-obstacle: FALSE
+			</br>
+			</br>
+				Right-obstacle: FALSE
+			</br>
+			</br>
+				Front-obstacle: FALSE
+			</br>
+			</br>
+				Back-obstacle: FALSE
+			</br>
+			</br>
+
+				New-direction: RIGHT
+
+			</div>
+
 			<span id="result"></span>
+
 			<div class="btn-group", id = btns>
 			  <button class="button">Anto Enable</button>
 			  <button class="button">Anto Disable</button>
 			  <button class="button">Button</button>
 			  <button class="button">Button</button>
 			</div>
+
 		</div> 
 		<script src="./virtualjoystick.js"></script>
 		<script>
