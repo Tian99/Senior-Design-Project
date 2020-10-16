@@ -1,6 +1,8 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 #include <ESP8266WiFi.h>
+#include<SoftwareSerial.h> //Included SoftwareSerial Library
+SoftwareSerial s(3,1);
 
 //Set Wifi ssid and password
 #define SSID_AP             "NodeMCU_WiFi_Car"    // for AP mode
@@ -21,13 +23,14 @@ int AIN2 = 16; //Direction
 int PWMB = 4; //Speed control
 int BIN1 = 15; //Direction
 int BIN2 = 13; //Direction
-
+int x;
+int y;
 //This function takes the parameters passed in the URL(the x and y coordinates of the joystick)
 //and sets the motor speed based on those parameters. 
 void handleJSData(){
   boolean yDir;
-  int x = server.arg(0).toInt() * 10;
-  int y = server.arg(1).toInt() * 10;
+  x = server.arg(0).toInt();
+  y = server.arg(1).toInt();
   int aSpeed = abs(y);
   int bSpeed = abs(y);
   //set the direction based on y being negative or positive
@@ -81,6 +84,7 @@ void setup()
   pinMode(BIN2, OUTPUT);  
   // Debug console
   Serial.begin(9600);
+   s.begin(115200);
   //initialize SPIFFS to be able to serve up the static HTML files. 
   if (!SPIFFS.begin()){
     Serial.println("SPIFFS Mount failed");
@@ -98,5 +102,7 @@ void setup()
 
 void loop()
 {
-  server.handleClient();  
+  server.handleClient();
+  s.write(x);
+  delay(10);  
 }
