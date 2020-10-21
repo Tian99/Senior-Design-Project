@@ -1,6 +1,7 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 #include<SoftwareSerial.h> //Included SoftwareSerial Library
 SoftwareSerial s(3,1);
 
@@ -99,10 +100,17 @@ void setup()
   server.on("/jsData.html", handleJSData);  
   server.begin();
 }
+StaticJsonBuffer<1000> jsonBuffer;
+JsonObject& root = jsonBuffer.createObject();
 
 void loop()
 {
   server.handleClient();
-  s.write(x);
+  if (isnan(x) || isnan(y)){
+    return;
+  }
+  root["x"] = x;
+  root["y"] = y;
+  root.printTo(s);
   delay(10);  
 }
