@@ -54,7 +54,7 @@
 			font-size: 8px;
 			background-color: black;
   			width: 90px;
-  			height: 120px;
+  			height: 150px;
   			border: 1px solid green;
   			padding: 1px;
   			margin: 1px;
@@ -109,6 +109,8 @@
 			<div id="feedback">
 				<p id = autoPilot>Auto-pilot: FALSE</p>
 
+				<p id = voice>Voice: FALSE</p>
+
 				<p>Left-obstacle: FALSE</p>
 
 				<p>Right-obstacle: FALSE</p>
@@ -127,14 +129,15 @@
 			<div class="btn-group", id = btns>
 			  <button class="button" onclick = "enable()">Anto Enable</button>
 			  <button class="button" onclick = "disable()">Anto Disable</button>
-			  <button class="button">Button</button>
-			  <button class="button">Button</button>
+			  <button class="button" onclick = "enable_v()">voice enable</button>
+			  <button class="button" onclick = "disable_v()">voice disable</button>
 			</div>
 
 		</div> 
 		<script src="./virtualjoystick.js"></script>
 		<script>
 			var auto_enable = 0;
+			var auto_enable_v = 0;
 			function enable() {
   			document.getElementById("autoPilot").innerHTML = "Auto-pilot: TRUE";
   				auto_enable = 1;
@@ -143,6 +146,15 @@
 				document.getElementById("autoPilot").innerHTML = "Auto-pilot: FALSE";
 				auto_enable = 0;
 				}
+			function enable_v(){
+  			document.getElementById("voice").innerHTML = "Voice: TRUE";
+  				auto_enable_v = 1;
+				}
+			function disable_v(){
+				document.getElementById("voice").innerHTML = "Voice: FALSE";
+				auto_enable_v = 0;
+				}
+
 			console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
 			var joystick	= new VirtualJoystick({
 				container	: document.getElementById('container'),
@@ -168,6 +180,12 @@
 					newX = 'a';
 					newY = 'a';
 				}
+
+				if(auto_enable_v == 1)
+				{
+					newX = 'v';
+					newY = 'v';
+				}
 				outputEl.innerHTML	= '<div id = "displacement">Position:'
 					+ ' X:'+newX
 					+ ' Y:'+newY
@@ -178,16 +196,18 @@
 					xhr.open('PUT', "./jsData.html?x="+10000+"&y="+10000)
 					xhr.send();
 				}
+
+				else if(newX === 'v')
+				{
+					var xhr = new XMLHttpRequest();
+					xhr.open('PUT', "./jsData.html?x="+20000+"&y="+20000)
+					xhr.send();
+				}
+				
 				else if ( newX != prevX || newY != prevY)
 				{
 					var xhr = new XMLHttpRequest();
 					xhr.open('PUT', "./jsData.html?x="+newX+"&y="+newY)
-					xhr.send();
-				}
-				else
-				{
-					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', "./jsData.html?x="+0+"&y="+0)
 					xhr.send();
 				}
 

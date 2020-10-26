@@ -51,16 +51,6 @@ void handleJSData(){
   //if either motor is going in reverse from what is expected,
   //just change the 2 digitalWrite lines for both motors:
   //!ydir would become ydir, and ydir would become !ydir
-  digitalWrite(STBY, HIGH);  
-  //MotorA
-  digitalWrite(AIN1, !yDir);
-  digitalWrite(AIN2, yDir);
-  analogWrite(PWMA, aSpeed);
-  //MotorB
-  digitalWrite(BIN1, !yDir);
-  digitalWrite(BIN2, yDir);
-  analogWrite(PWMB, bSpeed);
-
   //return an HTTP 200
   server.send(200, "text/plain", "");   
 }
@@ -109,8 +99,19 @@ void loop()
   if (isnan(x) || isnan(y)){
     return;
   }
-  root["x"] = x;
-  root["y"] = y;
-  root.printTo(s);
-  delay(10);  
+  if(x != 10000 && x != 20000)
+  {
+    root["x"] = x;
+    root["y"] = y;
+    root.printTo(s);
+    delay(10);  
+  }
+  //when Voice is activated yet autopilot is not.
+  else if(x != 10000 && x == 20000)
+  {
+    //Activate voice recognition
+      
+  }
+  
+  
 }
