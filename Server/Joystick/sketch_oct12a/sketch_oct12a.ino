@@ -16,6 +16,7 @@ ESP8266WebServer server(80);
 
 //Define the pins
 int STBY = 12; //standby
+int keep = 0;
 //Motor A
 int PWMA = 5; //Speed control
 int AIN1 = 14; //Direction
@@ -106,11 +107,30 @@ void loop()
     root.printTo(s);
     delay(10);  
   }
+
   //when Voice is activated yet autopilot is not.
-  else if(x != 10000 && x == 20000)
+  if(x == 20000)
   {
     //Activate voice recognition
-      
+    root["x"] = 0.1;
+    root["y"] = 0.1;
+    if(keep != 0.1)
+      root.printTo(s);
+    keep = 0.1;
+    delay(10); 
+    
+  }
+
+  else if(x == 10000)
+  {
+    //Activate Auto pilot
+    root["x"] = 0.2;
+    root["y"] = 0.2;
+    if(keep != 0.2)
+      root.printTo(s);
+    keep = 0.2;
+    delay(10); 
+    
   }
   
   
