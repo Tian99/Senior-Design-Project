@@ -1,25 +1,158 @@
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
+#include "VoiceRecognitionV3.h"
 
-int data; //Initialized variable to store recieved data
+VR myVR(2,3); //2:RX 3:TX
+
+uint8_t record[7]; //save record
+uint8_t buf[64];
+
 SoftwareSerial interface (10, 11); // RX, TX
+
+int group = 0;
+int led_voice = 13;
+int led_server = 12;
+#define switchRecord        (0)
+
+#define group0Record1       (1) 
+#define group0Record2       (2) 
+#define group0Record3       (3) 
+#define group0Record4       (4) 
+#define group0Record5       (5) 
+#define group0Record6       (6) 
+
+#define group1Record1       (7) 
+#define group1Record2       (8) 
+#define group1Record3       (9) 
+#define group1Record4       (10) 
+#define group1Record5       (11) 
+#define group1Record6       (12) 
+
 void setup() {
-  //Serial Begin at 9600 Baud 
-  interface.begin(115200);
+  //Serial Begin at 9600 Baud
+  myVR.begin(9600);
   Serial.begin(115200);
+
+  //Error check server
   while (!interface) continue;
+  pinMode(led_voice, OUTPUT);
+  pinMode(led_server, OUTPUT);
+  //Load the records for voice recognition
+  record[0] = switchRecord;
+  record[1] = group0Record1;
+  record[2] = group0Record2;
+  record[3] = group0Record3;
+  record[4] = group0Record4;
+  record[5] = group0Record5;
+  record[6] = group0Record6;
+  group = 0;
+  if(myVR.load(record, 7) >= 0){
+    printRecord(record, 7);
+    Serial.println(F("loaded."));
+  }
+
+   interface.begin(115200); 
 }
 
-void loop() {
+bool a_voice = false;
+bool a_pilot = false;
 
-   StaticJsonBuffer<1000> jsonBuffer;
-   JsonObject& root = jsonBuffer.parseObject(interface);
+void loop() {
+  //Activate voice recognition
+  if(a_voice)
+  {
+     digitalWrite(led_server, HIGH);
+     myVR.listen();
+        voice();
+  }
+
+  //Activate autopilot
+  else if(a_pilot)
+  {
+     digitalWrite(led_voice, LOW);
+  }
+  interface.listen();
+    print_server();
+}
+void voice()
+{
+  int ret;
+  ret = myVR.recognize(buf, 50);
+  if(ret>0){
+    switch(buf[1]){
+      case switchRecord:
+      if(digitalRead(led_voice) == HIGH){
+          digitalWrite(led_voice, LOW);
+        }else{
+          digitalWrite(led_voice, HIGH);
+        }
+        if(group == 0){
+          group = 1;
+          myVR.clear();
+          record[0] = switchRecord;
+          record[1] = group1Record1;
+          record[2] = group1Record2;
+          record[3] = group1Record3;
+          record[4] = group1Record4;
+          record[5] = group1Record5;
+          record[6] = group1Record6;
+          if(myVR.load(record, 7) >= 0){
+            printRecord(record, 7);
+            Serial.println(F("loaded."));
+          }
+        }else{
+          group = 0;
+          myVR.clear();
+          record[0] = switchRecord;
+          record[1] = group0Record1;
+          record[2] = group0Record2;
+          record[3] = group0Record3;
+          record[4] = group0Record4;
+          record[5] = group0Record5;
+          record[6] = group0Record6;
+          if(myVR.load(record, 7) >= 0){
+            printRecord(record, 7);
+            Serial.println(F("loaded."));
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    /** voice recognized */
+    printVR(buf);
+  }
+}
+
+
+void print_server()
+{
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(interface);
+  
   if (root == JsonObject::invalid())
   {
     return;
   }
 
-    //Print the data in the serial monitor
+  if((int)root["x"] > 15000)
+  {
+    //Activate voice recognition.
+    a_voice = true;
+    
+  }
+  else if((int)root["x"] > 9999)
+  {
+    //Activate auto pilot
+    a_pilot = true;
+  }
+  else
+  {
+    a_voice = false;
+    a_pilot = false;  
+  }
+
+  //Print the data in the serial monitor
   Serial.println("JSON received and parsed");
   root.prettyPrintTo(Serial);
   Serial.println("");
@@ -32,4 +165,61 @@ void loop() {
   Serial.println("---------------------xxxxx--------------------");
   Serial.println("");
 //  delay(10);
+
+}
+
+void printSignature(uint8_t *buf, int len)
+{
+  int i;
+  for(i=0; i<len; i++){
+    if(buf[i]>0x19 && buf[i]<0x7F){
+      Serial.write(buf[i]);
+    }
+    else{
+      Serial.print("[");
+      Serial.print(buf[i], HEX);
+      Serial.print("]");
+    }
+  }
+}
+
+void printVR(uint8_t *buf)
+{
+  Serial.println("VR Index\tGroup\tRecordNum\tSignature");
+
+  Serial.print(buf[2], DEC);
+  Serial.print("\t\t");
+
+  if(buf[0] == 0xFF){
+    Serial.print("NONE");
+  }
+  else if(buf[0]&0x80){
+    Serial.print("UG ");
+    Serial.print(buf[0]&(~0x80), DEC);
+  }
+  else{
+    Serial.print("SG ");
+    Serial.print(buf[0], DEC);
+  }
+  Serial.print("\t");
+
+  Serial.print(buf[1], DEC);
+  Serial.print("\t\t");
+  if(buf[3]>0){
+    printSignature(buf+4, buf[3]);
+  }
+  else{
+    Serial.print("NONE");
+  }
+//  Serial.println("\r\n");
+  Serial.println();
+}
+
+void printRecord(uint8_t *buf, uint8_t len)
+{
+  Serial.print(F("Record: "));
+  for(int i=0; i<len; i++){
+    Serial.print(buf[i], DEC);
+    Serial.print(", ");
+  }
 }

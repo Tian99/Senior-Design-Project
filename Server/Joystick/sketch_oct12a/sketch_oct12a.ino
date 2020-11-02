@@ -14,6 +14,8 @@ IPAddress gateway(192, 168, 4, 1); //IP for AP mode
 IPAddress subnet(255, 255, 255, 0); //IP for AP mode
 ESP8266WebServer server(80);
 
+int led = 7;
+
 //Define the pins
 int STBY = 12; //standby
 int keep = 0;
@@ -75,7 +77,7 @@ void setup()
   pinMode(BIN1, OUTPUT);
   pinMode(BIN2, OUTPUT);  
   // Debug console
-  Serial.begin(9600);
+  Serial.begin(115200);
    s.begin(115200);
   //initialize SPIFFS to be able to serve up the static HTML files. 
   if (!SPIFFS.begin()){
@@ -105,30 +107,26 @@ void loop()
     root["x"] = x;
     root["y"] = y;
     root.printTo(s);
-    delay(10);  
+    delay(10);
   }
 
   //when Voice is activated yet autopilot is not.
   if(x == 20000)
   {
     //Activate voice recognition
-    root["x"] = 0.1;
-    root["y"] = 0.1;
-    if(keep != 0.1)
+    root["x"] = 20000;
+    root["y"] = 20000;
       root.printTo(s);
-    keep = 0.1;
-    delay(10); 
+    delay(10);
     
   }
 
   else if(x == 10000)
   {
     //Activate Auto pilot
-    root["x"] = 0.2;
-    root["y"] = 0.2;
-    if(keep != 0.2)
+    root["x"] = 10000;
+    root["y"] = 10000;
       root.printTo(s);
-    keep = 0.2;
     delay(10); 
     
   }
