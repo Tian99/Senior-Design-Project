@@ -107,7 +107,7 @@ void loop()
     root["x"] = x;
     root["y"] = y;
     root.printTo(s);
-    delay(10);
+//    delay(10);
   }
 
   //when Voice is activated yet autopilot is not.
@@ -117,7 +117,7 @@ void loop()
     root["x"] = 20000;
     root["y"] = 20000;
       root.printTo(s);
-    delay(10);
+//    delay(10);
     
   }
 
@@ -127,7 +127,7 @@ void loop()
     root["x"] = 10000;
     root["y"] = 10000;
       root.printTo(s);
-    delay(10); 
+//    delay(10); 
     
   }
   

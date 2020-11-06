@@ -1,36 +1,46 @@
-const int pingPin = 51; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 50; // Echo Pin of Ultrasonic Sensor
+#define trigPin1 3
+#define echoPin1 2
+#define trigPin2 4
+#define echoPin2 5
+#define trigPin3 7
+#define echoPin3 8
 
-void setup() {
-   Serial.begin(9600); // Starting Serial Terminal
+long duration, distance, RightSensor,BackSensor,FrontSensor,LeftSensor;
+
+void setup()
+{
+Serial.begin (9600);
+pinMode(trigPin1, OUTPUT);
+pinMode(echoPin1, INPUT);
+pinMode(trigPin2, OUTPUT);
+pinMode(echoPin2, INPUT);
+pinMode(trigPin3, OUTPUT);
+pinMode(echoPin3, INPUT);
 }
 
 void loop() {
-   long duration, inches, cm;
-   pinMode(pingPin, OUTPUT);
-   digitalWrite(pingPin, LOW);
-   delayMicroseconds(2);
-   digitalWrite(pingPin, HIGH);
-   delayMicroseconds(10);
-   digitalWrite(pingPin, LOW);
-   pinMode(echoPin, INPUT);
-   duration = pulseIn(echoPin, HIGH);
-   inches = microsecondsToInches(duration);
-   cm = microsecondsToCentimeters(duration);
-   Serial.print(inches);
-   Serial.print("in, ");
-   Serial.print(cm);
-   Serial.print("cm");
-   Serial.println();
-   delay(100);
+SonarSensor(trigPin1, echoPin1);
+RightSensor = distance;
+SonarSensor(trigPin2, echoPin2);
+LeftSensor = distance;
+SonarSensor(trigPin3, echoPin3);
+FrontSensor = distance;
+
+Serial.print(LeftSensor);
+Serial.print(" - ");
+Serial.print(FrontSensor);
+Serial.print(" - ");
+Serial.println(RightSensor);
 }
 
-long microsecondsToInches(long microseconds) {
-   return microseconds / 74 / 2;
-}
+void SonarSensor(int trigPin,int echoPin)
+{
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+duration = pulseIn(echoPin, HIGH);
+distance = (duration/2) / 29.1;
 
-long microsecondsToCentimeters(long microseconds) {
-   return microseconds / 29 / 2;
 }
-
-//Source::https://www.youtube.com/watch?v=esrm0JGaAqI&t=205s

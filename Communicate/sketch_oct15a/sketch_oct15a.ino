@@ -12,6 +12,11 @@ SoftwareSerial interface (10, 11); // RX, TX
 int group = 0;
 int led_voice = 13;
 int led_server = 12;
+int led_forward = 9;
+int led_left = 8;
+int led_right = 7;
+int led_backward = 6;
+int led_pilot = 5;
 #define switchRecord        (0)
 
 #define group0Record1       (1) 
@@ -37,6 +42,12 @@ void setup() {
   while (!interface) continue;
   pinMode(led_voice, OUTPUT);
   pinMode(led_server, OUTPUT);
+  pinMode(led_pilot, OUTPUT);
+  pinMode(led_forward, OUTPUT);
+  pinMode(led_backward, OUTPUT);
+  pinMode(led_left, OUTPUT);
+  pinMode(led_right, OUTPUT);
+  
   //Load the records for voice recognition
   record[0] = switchRecord;
   record[1] = group0Record1;
@@ -59,9 +70,10 @@ bool a_pilot = false;
 
 void loop() {
   //Activate voice recognition
+
   if(a_voice)
   {
-     digitalWrite(led_server, HIGH);
+     digitalWrite(led_voice, HIGH);
      myVR.listen();
         voice();
   }
@@ -70,7 +82,15 @@ void loop() {
   else if(a_pilot)
   {
      digitalWrite(led_voice, LOW);
+     digitalWrite(led_pilot, HIGH);
   }
+  
+  else
+  {
+    digitalWrite(led_voice, LOW);
+    digitalWrite(led_pilot, LOW);
+  }
+  digitalWrite(led_server, HIGH);
   interface.listen();
     print_server();
 }
@@ -81,11 +101,11 @@ void voice()
   if(ret>0){
     switch(buf[1]){
       case switchRecord:
-      if(digitalRead(led_voice) == HIGH){
-          digitalWrite(led_voice, LOW);
-        }else{
-          digitalWrite(led_voice, HIGH);
-        }
+//      if(digitalRead(led_voice) == HIGH){
+//          digitalWrite(led_voice, LOW);
+//        }else{
+//          digitalWrite(led_voice, HIGH);
+//        }
         if(group == 0){
           group = 1;
           myVR.clear();
@@ -139,12 +159,14 @@ void print_server()
   {
     //Activate voice recognition.
     a_voice = true;
+    a_pilot = false;
     
   }
   else if((int)root["x"] > 9999)
   {
     //Activate auto pilot
     a_pilot = true;
+    a_voice = false;
   }
   else
   {
