@@ -78,7 +78,7 @@ void setup()
   pinMode(BIN2, OUTPUT);  
   // Debug console
   Serial.begin(115200);
-   s.begin(115200);
+  s.begin(38400);
   //initialize SPIFFS to be able to serve up the static HTML files. 
   if (!SPIFFS.begin()){
     Serial.println("SPIFFS Mount failed");

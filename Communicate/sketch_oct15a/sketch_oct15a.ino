@@ -62,7 +62,7 @@ void setup() {
     Serial.println(F("loaded."));
   }
 
-   interface.begin(115200); 
+   interface.begin(38400); 
 }
 
 bool a_voice = false;
@@ -97,16 +97,36 @@ void loop() {
 }
 void voice()
 {
+
   int ret;
   ret = myVR.recognize(buf, 50);
   if(ret>0){
+    Serial.println(buf[1]);
     switch(buf[1]){
+      case group0Record3:
+        digitalWrite(led_forward, HIGH);
+        digitalWrite(led_backward, LOW);
+      break;
+      case group0Record4:
+        digitalWrite(led_forward, LOW);
+        digitalWrite(led_backward, HIGH);
+      break;
+      case group0Record5:
+        digitalWrite(led_right, LOW);
+        digitalWrite(led_left, HIGH);
+      break;
+      case group0Record6:
+        digitalWrite(led_left, LOW);
+        digitalWrite(led_right, HIGH);
+      break;
+      
       case switchRecord:
 //      if(digitalRead(led_voice) == HIGH){
 //          digitalWrite(led_voice, LOW);
 //        }else{
 //          digitalWrite(led_voice, HIGH);
 //        }
+        
         if(group == 0){
           group = 1;
           myVR.clear();
@@ -204,19 +224,19 @@ void print_server()
     }
   }
 
-  //Print the data in the serial monitor
-  Serial.println("JSON received and parsed");
-  root.prettyPrintTo(Serial);
-  Serial.println("");
-  Serial.print("X");
-  int data1=root["x"];
-  Serial.println(data1);
-  Serial.print("Y");
-  int data2=root["y"];
-  Serial.println(data2);
-  Serial.println("---------------------xxxxx--------------------");
-  Serial.println("");
-//  delay(10);
+//  //Print the data in the serial monitor
+//  Serial.println("JSON received and parsed");
+////  root.prettyPrintTo(Serial);
+//  Serial.println("");
+//  Serial.print("X");
+//  int data1=root["x"];
+//  Serial.println(data1);
+//  Serial.print("Y");
+//  int data2=root["y"];
+//  Serial.println(data2);
+//  Serial.println("---------------------xxxxx--------------------");
+//  Serial.println("");
+////  delay(10);
 
 }
 
