@@ -102,32 +102,32 @@ void loop()
   if (isnan(x) || isnan(y)){
     return;
   }
-  if(x != 10000 && x != 20000)
+  if(x > -15000 && x < 15000)
   {
     root["x"] = x;
     root["y"] = y;
     root.printTo(s);
-//    delay(10);
+//    delay(100);
   }
 
   //when Voice is activated yet autopilot is not.
-  if(x == 20000)
+  if(x > 15000)
   {
     //Activate voice recognition
     root["x"] = 20000;
     root["y"] = 20000;
-      root.printTo(s);
-//    delay(10);
+    root.printTo(s);
+//    delay(100);
     
   }
 
-  else if(x == 10000)
+  else if(x < -15000)
   {
     //Activate Auto pilot
-    root["x"] = 10000;
-    root["y"] = 10000;
-      root.printTo(s);
-//    delay(10); 
+    root["x"] = -2000;
+    root["y"] = -2000;
+    root.printTo(s);
+//    delay(100); 
     
   }
   

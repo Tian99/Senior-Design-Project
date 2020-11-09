@@ -71,18 +71,19 @@ bool a_pilot = false;
 void loop() {
   //Activate voice recognition
 
-  if(a_voice)
+  //Activate autopilot
+  if(a_pilot)
+  {
+     digitalWrite(led_voice, LOW);
+     digitalWrite(led_pilot, HIGH);
+  }
+
+  
+  else if(a_voice)
   {
      digitalWrite(led_voice, HIGH);
      myVR.listen();
         voice();
-  }
-
-  //Activate autopilot
-  else if(a_pilot)
-  {
-     digitalWrite(led_voice, LOW);
-     digitalWrite(led_pilot, HIGH);
   }
   
   else
@@ -92,7 +93,7 @@ void loop() {
   }
   digitalWrite(led_server, HIGH);
   interface.listen();
-    print_server();
+  print_server();
 }
 void voice()
 {
@@ -155,23 +156,52 @@ void print_server()
     return;
   }
 
-  if((int)root["x"] > 15000)
+  if((int)root["x"] < -1000 && (int)root["y"] < -1000)
+  {
+    //Activate auto pilot
+    a_pilot = true;
+    a_voice = false;
+  }
+  else if((int)root["x"] > 10000 && (int)root["y"] > 10000)
   {
     //Activate voice recognition.
     a_voice = true;
     a_pilot = false;
     
   }
-  else if((int)root["x"] > 9999)
-  {
-    //Activate auto pilot
-    a_pilot = true;
-    a_voice = false;
-  }
-  else
+  //When both cases are false
+  else if((int)root["x"] < 10000 &&(int)root["x"] > -1000 && (int)root["y"] < 10000 &&(int)root["y"] > -1000 )
   {
     a_voice = false;
     a_pilot = false;  
+
+    if((int)root["y"] > 0)
+    {
+      digitalWrite(led_forward, HIGH);
+      digitalWrite(led_backward, LOW);
+    }
+    else if((int)root["y"] < 0)
+    {
+      digitalWrite(led_forward, LOW);
+      digitalWrite(led_backward, HIGH);
+    }
+    if((int)root["x"] < 0)
+    {
+      digitalWrite(led_left, HIGH);
+      digitalWrite(led_right, LOW);
+    }
+    else if((int)root["x"] > 0)
+    {
+      digitalWrite(led_left, LOW);
+      digitalWrite(led_right, HIGH);
+    }
+    else if((int)root["x"] == 0 && (int)root["y"] == 0)
+    {
+      digitalWrite(led_left, LOW);
+      digitalWrite(led_right, LOW);
+      digitalWrite(led_forward, LOW);
+      digitalWrite(led_backward, LOW);
+    }
   }
 
   //Print the data in the serial monitor
