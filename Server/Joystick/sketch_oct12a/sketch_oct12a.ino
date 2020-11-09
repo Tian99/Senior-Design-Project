@@ -14,6 +14,10 @@ IPAddress gateway(192, 168, 4, 1); //IP for AP mode
 IPAddress subnet(255, 255, 255, 0); //IP for AP mode
 ESP8266WebServer server(80);
 
+//Control the serial communication
+int count_v;
+int count_a;
+
 int led = 7;
 
 //Define the pins
@@ -107,6 +111,8 @@ void loop()
     root["x"] = x;
     root["y"] = y;
     root.printTo(s);
+    count_v = 0;
+    count_a = 0;
 //    delay(100);
   }
 
@@ -116,7 +122,10 @@ void loop()
     //Activate voice recognition
     root["x"] = 20000;
     root["y"] = 20000;
+//    if(count_v < 3)
     root.printTo(s);
+    count_v ++;
+    
 //    delay(100);
     
   }
@@ -126,7 +135,9 @@ void loop()
     //Activate Auto pilot
     root["x"] = -2000;
     root["y"] = -2000;
+//    if(count_a < 3)
     root.printTo(s);
+    count_a ++;
 //    delay(100); 
     
   }

@@ -103,6 +103,14 @@ void voice()
   if(ret>0){
     Serial.println(buf[1]);
     switch(buf[1]){
+        case group0Record1:
+        digitalWrite(led_left, LOW);
+        digitalWrite(led_right, LOW);
+      break;
+        case group0Record2:
+        digitalWrite(led_forward, LOW);
+        digitalWrite(led_backward, LOW);
+      break;
       case group0Record3:
         digitalWrite(led_forward, HIGH);
         digitalWrite(led_backward, LOW);
@@ -119,7 +127,6 @@ void voice()
         digitalWrite(led_left, LOW);
         digitalWrite(led_right, HIGH);
       break;
-      
       case switchRecord:
 //      if(digitalRead(led_voice) == HIGH){
 //          digitalWrite(led_voice, LOW);
