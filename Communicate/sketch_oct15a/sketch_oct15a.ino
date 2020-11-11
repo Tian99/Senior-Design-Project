@@ -67,7 +67,11 @@ void setup() {
 
 bool a_voice = false;
 bool a_pilot = false;
-
+int distance1 = 0;
+int distance2 = 200;
+int distance3 = 400;
+int distance4 = 600;
+int current = 0;
 void loop() {
   //Activate voice recognition
 
@@ -76,6 +80,37 @@ void loop() {
   {
      digitalWrite(led_voice, LOW);
      digitalWrite(led_pilot, HIGH);
+     current += 1;
+     if(current > distance1 && current < distance2 )
+     {
+        digitalWrite(led_forward, HIGH);
+        digitalWrite(led_right, LOW);
+     }
+     else if(current > distance2 && current < distance3 )
+     {
+        digitalWrite(led_forward, LOW);
+        digitalWrite(led_right, HIGH);
+     }
+
+     else if(current > distance3 && current < distance4 )
+     {
+        digitalWrite(led_right, LOW);
+        digitalWrite(led_backward, HIGH);
+     }
+
+     
+     else if(current > distance4 && current < 800)
+     {
+        digitalWrite(led_backward, LOW);
+        digitalWrite(led_left, HIGH);
+     }
+ 
+     if(current > 800) 
+     {
+       digitalWrite(led_left, LOW);
+       current = 0;
+     }
+
   }
 
   
