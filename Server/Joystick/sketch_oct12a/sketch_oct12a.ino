@@ -120,8 +120,8 @@ void loop()
   if(x > 15000)
   {
     //Activate voice recognition
-    root["x"] = 20000;
-    root["y"] = 20000;
+    root["x"] = 200;
+    root["y"] = 200;
 //    if(count_v < 3)
     root.printTo(s);
     count_v ++;
@@ -133,8 +133,8 @@ void loop()
   else if(x < -15000)
   {
     //Activate Auto pilot
-    root["x"] = -2000;
-    root["y"] = -2000;
+    root["x"] = -200;
+    root["y"] = -200;
 //    if(count_a < 3)
     root.printTo(s);
     count_a ++;

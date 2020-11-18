@@ -136,7 +136,6 @@ void voice()
   int ret;
   ret = myVR.recognize(buf, 50);
   if(ret>0){
-    Serial.println(buf[1]);
     switch(buf[1]){
         case group0Record1:
         digitalWrite(led_left, LOW);
@@ -210,7 +209,7 @@ void voice()
 
 void print_server()
 {
-  StaticJsonBuffer<1000> jsonBuffer;
+  StaticJsonBuffer<50> jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(interface);
   
   if (root == JsonObject::invalid())
@@ -218,13 +217,13 @@ void print_server()
     return;
   }
 
-  if((int)root["x"] < -1000 && (int)root["y"] < -1000)
+  if((int)root["x"] < -150 && (int)root["y"] < -150)
   {
     //Activate auto pilot
     a_pilot = true;
     a_voice = false;
   }
-  else if((int)root["x"] > 10000 && (int)root["y"] > 10000)
+  else if((int)root["x"] > 150 && (int)root["y"] > 150)
   {
     //Activate voice recognition.
     a_voice = true;
@@ -232,7 +231,7 @@ void print_server()
     
   }
   //When both cases are false
-  else if((int)root["x"] < 10000 &&(int)root["x"] > -1000 && (int)root["y"] < 10000 &&(int)root["y"] > -1000 )
+  else if((int)root["x"] < 150 &&(int)root["x"] > -150 && (int)root["y"] < 150 &&(int)root["y"] > -150 )
   {
     a_voice = false;
     a_pilot = false;  
